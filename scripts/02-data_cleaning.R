@@ -16,9 +16,13 @@ raw_data <- read_csv("streetcar_delay_analysis/data/raw_data/2023_streetcar.csv"
 sum(is.na(data))
 data1 <- raw_data %>% mutate(`Min Delay` = as.numeric(trimws(`Min Delay`)))
 data1 <- na.omit(data1)
-data3 <- data1 %>% filter(`Min Delay` > 0 & `Min Delay` < 60)
+
+#delete outlier data
+sum(data1$`Min Delay` < 61)
+sum(data1$`Min Delay` > 60)
+data3 <- data1 %>% filter(`Min Delay` > 0 & `Min Delay` < 61)
 cleaned_data <- data3 %>% select(Day, Location, `Min Delay`, Bound)
 
 
 #### Save data ####
-write_csv(cleaned_data, "outputs/data/analysis_data.csv")
+write_csv(cleaned_data, "streetcar_delay_analysis/data/analysis_data/cleaned_data.csv")
