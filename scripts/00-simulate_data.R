@@ -15,8 +15,8 @@ library(tidyverse)
 set.seed(333)
 
 # define possible location name
-Location <- c("QUEENS QUAY AND HARBOU", "SPADINA AND QUEENS QUA", 
-             "KIING AND BATHURST", "EGLINTON GARAGE", "COLLEGE AND OSSINGTON")
+streetcar_data <- read_csv("streetcar_delay_analysis/data/raw_data/2023_streetcar.csv")
+all_locations <- unique(streetcar_data$Location)
 
 # define direction of streetcar
 Bound <- c("E", "S", "W", "N")
@@ -26,13 +26,13 @@ start_d <- as.Date("2023-03-01")
 end_d <- as.Date("2023-09-01")
 
 # set number of observations
-n <- 500
+n <- 10000
 
 # simulate the data
 simulated_data <- tibble(
   date = s_Date <- sample(seq(start_d, end_d, by = "day"), size = n, replace = TRUE),
-  location = s_loca <- sample(Location, size = n, replace = TRUE),
-  min_delay = s_min_delay <- sample(1:59, size = n, replace = TRUE),
+  location = s_loca <- sample(all_locations, size = n, replace = TRUE),
+  min_delay = s_min_delay <- sample(1:60, size = n, replace = TRUE),
   bound = s_bound <- sample(Bound, size = n, replace = TRUE))
 
 # storage simulated data
