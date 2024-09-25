@@ -1,13 +1,10 @@
 ---
-title: "My title"
-subtitle: "My subtitle if needed"
-author: 
-  - First author
-  - Another author
-thanks: "Code and data are available at: LINK."
+title: "Data analysis for 2023 streetcar's delay pattern in Toronto"
+author: YITONG WANG
+thanks: "Code and data are available at: https://github.com/demainwang/streetcar_delay_analysis"
 date: today
 date-format: long
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "This paper analyze the delay patern of streetcar in Toronto in 2023 years based on the data from opendatatoronto. The result of analysis figure out that most streetcars' delays are concentrate in peak hour and occurs in specific intersection which located at prosperous square. Overall delays are short and within 10 minutes, extreme cases occasionaly happen. The main cause of delays are operational issue and mechanical problems, the finding provides an instructive direction which public transit should improve.."
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -19,202 +16,175 @@ bibliography: references.bib
 #| message: false
 
 library(tidyverse)
-library(palmerpenguins)
+library(knitr)
+```
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+# Read data
+cleaned_data <- read_csv('cleaned_data.csv')
 ```
 
 
 # Introduction
+In the metropolis like Toronto, public transportation is critical and essential
+for citizens' mobility, the streetcar runs by TTC is one common way that people
+use in their life. Public transportation originally aims to provide a more
+convenient way for people's mobility and reduce the traffic congestion, but the 
+frequent delays can cause an significant disruption for living quality and business.
 
-You can and should cross-reference sections and sub-sections. We use @citeR and @rohan.
+It is important to understand the pattern of delays, which can potentially improve
+the public transportation system. The reason of delays can be widely vary with time,
+location and incident. The data analysis notice that delay of streetcar has a high 
+possibility occur during rush hour in some prosperous region such as dunds square.
+The statistic analysis show that overall delay's time within 1 hour, and concentrate 
+in 10 minutes, some extreme cases also happen but with a less possibility. Due to the
+construction operating route of streetcar, most lines are east-west orientation, most
+delays occure in east-west bound.
 
-The remainder of this paper is structured as follows. @sec-data....
-
+The paper focus on the 2023 streetcar's delay data from opendatatoronto (@citeopendatatoronto),
+based on R (@citeR) to do the data computing, and use package 'tidyverse' (@rohan) to
+create visualization and plotting, we use 'knitr' (@citeknitr). The paper aims to figure out the delay's pattern,
+and identify the variables contribute to delays of streetcar, such as location and time period, especially which incidents mainly affect the normal operation of streetcar. The rest
+of paper will discuss the source data and introduce the variables in @sec-data, the 
+visualization of data and tabular summary also present the important trend of streetcar
+delay data.
 
 
 # Data {#sec-data}
+## Data bacground
+The data we use in this paper comes from opendatatoronto, the dataset 'TTC Streetcar Delay Data' we use provides detailed information on streetcar delays in Toronto in 2023. Each record contains the date and time of the delay, the route, the location where the delay occurred, the reason for the delay, and the duration of the delay. We select some interest column to 
+figure out the pattern of occurrence of delay, summary the delay times and frequency
+for different variables. We cleaned the data, which removes row contain and abnormal 
+values, such as N/A or 0, and limit the delay time interval within 1 hour interval
+to exclude the outlier, since most delay time does not over 1 hour. We ignore the'route', 
+'Line', 'Vehicle' and'Min Gap' in raw data since it does not contribute to our research.
 
-Some of our data is of penguins (@fig-bills), from @palmerpenguins.
-
-```{r}
-#| label: fig-bills
-#| fig-cap: Bills of penguins
-#| echo: false
-
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = "none") +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
-```
-
-Talk more about it.
-
-And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
-
-```{r}
-#| label: fig-planes
-#| fig-cap: Relationship between wing length and width
-#| echo: false
-#| warning: false
-#| message: false
-
-analysis_data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
-
-analysis_data |> 
-  ggplot(aes(x = width, y = length)) +
-  geom_point(alpha = 0.8) +
-  theme_minimal() +
-  labs(x = "Wing width (mm)",
-       y = "Wing length (mm)")
-```
-
-Talk way more about it. 
-
-
-
-# Model
-
-The goal of our modelling strategy is twofold. Firstly,...
-
-Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
-
-## Model set-up
-
-Define $y_i$ as the number of seconds that the plane remained aloft. Then $\beta_i$ is the wing width and $\gamma_i$ is the wing length, both measured in millimeters.  
-
-\begin{align} 
-y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
-\mu_i &= \alpha + \beta_i + \gamma_i\\
-\alpha &\sim \mbox{Normal}(0, 2.5) \\
-\beta &\sim \mbox{Normal}(0, 2.5) \\
-\gamma &\sim \mbox{Normal}(0, 2.5) \\
-\sigma &\sim \mbox{Exponential}(1)
-\end{align}
-
-We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
-
-
-### Model justification
-
-We expect a positive relationship between the size of the wings and time spent aloft. In particular...
-
-We can use maths by including latex between dollar signs, for instance $\theta$.
-
-
-# Results
-
-Our results are summarized in @tbl-modelresults.
-
-```{r}
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-library(rstanarm)
-
-first_model <-
-  readRDS(file = here::here("models/first_model.rds"))
-```
-
-```{r}
-#| echo: false
-#| eval: true
-#| label: tbl-modelresults
-#| tbl-cap: "Explanatory models of flight time based on wing width and wing length"
-#| warning: false
-
-modelsummary::modelsummary(
-  list(
-    "First model" = first_model
-  ),
-  statistic = "mad",
-  fmt = 2
-)
-```
-
-
-
-
-# Discussion
-
-## First discussion point {#sec-first-point}
-
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
-
-## Second discussion point
-
-## Third discussion point
-
-## Weaknesses and next steps
-
-Weaknesses and next steps should also be included.
+## Ethical focus
+From the ethical perspective, this dataset does not contain any personal information, so there are fewer privacy issues. However, we need to consider the social context that drives data collection. Toronto's public transportation system, especially streetcar services, has always been a concern due to its reliability issues. The collection of this data aims to improve transparency and provide a foundation for data based policy making to improve the efficiency of
+public transportation.
 
 \newpage
 
-\appendix
-
-# Appendix {-}
-
-
-# Additional data details
-
-# Model details {#sec-model-details}
-
-## Posterior predictive check
-
-In @fig-ppcheckandposteriorvsprior-1 we implement a posterior predictive check. This shows...
-
-In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. This shows... 
+# Visualization
 
 ```{r}
-#| eval: true
+#| eveal: true
+#| label: fig-1
+#| fig-cap: "Distribution of streetcar's delay time frequency"
 #| echo: false
-#| message: false
 #| warning: false
-#| label: fig-ppcheckandposteriorvsprior
-#| layout-ncol: 2
-#| fig-cap: "Examining how the model fits, and is affected by, the data"
-#| fig-subcap: ["Posterior prediction check", "Comparing the posterior with the prior"]
+#| message: false
+#| layout-ncol: 1
 
-pp_check(first_model) +
-  theme_classic() +
-  theme(legend.position = "bottom")
-
-posterior_vs_prior(first_model) +
-  theme_minimal() +
-  scale_color_brewer(palette = "Set1") +
-  theme(legend.position = "bottom") +
-  coord_flip()
+ggplot(cleaned_data, aes(x = `Min Delay`)) +
+  geom_histogram(binwidth = 5, fill = "grey", color = "black") +
+  labs(title = "Frequency of Streetcar Delay Duration",
+       x = "Delay Duration (Mins)", y = "Frequency") +
+  theme_minimal()
 ```
 
-## Diagnostics
-
-@fig-stanareyouokay-1 is a trace plot. It shows... This suggests...
-
-@fig-stanareyouokay-2 is a Rhat plot. It shows... This suggests...
-
-```{r}
-#| echo: false
-#| eval: true
-#| message: false
-#| warning: false
-#| label: fig-stanareyouokay
-#| fig-cap: "Checking the convergence of the MCMC algorithm"
-#| fig-subcap: ["Trace plot", "Rhat plot"]
-#| layout-ncol: 2
-
-plot(first_model, "trace")
-
-plot(first_model, "rhat")
-```
-
-
+@fig-1 shows a clear right skewed distribution of the frequency of delay time period, 
+most common duration is around 10 minutes, which occupy 60 percents of total delay
+times. It presents in most situation the streetcar just typically delay for short
+time, and does not make a serious disruption for citizen's convenience.
 
 \newpage
 
+```{r}
+#| eval: true
+#| label: fig-2
+#| fig-cap: "Frequecy of incidents and incidents causing delay time"
+#| echo: false
+#| warning: false
+#| message: false
+#| layout-ncol: 2
+
+incidents <- cleaned_data %>%
+  count(Incident, sort = TRUE)
+ggplot(incidents, aes(x = reorder(Incident, n), y = n)) +
+  geom_bar(stat = "identity", fill = "grey") +
+  labs(title = "Frequency of Streetcar Incidents",
+       x = "Incident Type", y = "Frequency of Incident") +
+  theme_minimal() +
+  coord_flip()
+
+ggplot(cleaned_data, aes(x = Incident, y = `Min Delay`)) +
+  geom_boxplot(fill = "grey") +
+  labs(title = "Delay Time by Vary Incidents",
+       x = "Incident", y = "Delay Time (Mins)") +
+  theme_minimal() +
+  coord_flip()
+```
+
+@fig-2-1 The bar plots presents operational issue and mechnical problem are the top
+2 main cause of delay, and the responsibility for this 2 factors belong to TTC, 
+it is obvious TTC company should improve their internal training and have a better
+inspection before the operation of streetcar. 
+
+
+@fig-2-2 Fortunately, the box plot shows
+these 2 main factors ofdelay do not result in a hard disruption of citizen's transportation, they usually lead to a 10 minutes delay.
+
+\newpage
+
+```{r}
+#| eveal: true
+#| label: fig-3
+#| fig-cap: "Trend of delay times by month"
+#| echo: false
+#| warning: false
+#| message: false
+
+monthly_delay <- cleaned_data %>%
+  mutate(Month = floor_date(Date, "month")) %>%
+  group_by(Month) %>%
+  summarize(Delay_Count = n())
+
+ggplot(monthly_delay, aes(x = Month, y = Delay_Count)) +
+  geom_line(color = "black", linewidth = 1) +
+  geom_point(color = "red", size = 1) +
+  labs(title = "Time Series of Streetcar Delays Through the Year",
+       x = "Month", y = "Times of Delays") +
+  theme_minimal()
+```
+
+
+
+@fig-3 The line plot shows a increase trend of the frequency of delays, before september
+the monthly delay has fluctuation between 750 to 900, and has a significant increase
+from september to october, then keep going up. The incrase trend shows the delay
+frequency becoming increasingly serve alone time.
+
+\newpage
+
+```{r}
+#| eval: true
+#| label: fig-4
+#| fig-cap: "Trend of delay times by month"
+#| echo: false
+#| warning: false
+#| message: false
+
+summary_table <- cleaned_data %>%
+  group_by(Location) %>%
+  summarise(Total_Delays = n()) %>%  
+  arrange(desc(Total_Delays)) %>%
+  slice(1:15)
+kable(summary_table, caption = "Summary of Streetcar Delays by Location",
+      col.names = c("Location", "Total Delays"))
+```
+
+@fig-4 This table summary the total delays times by different location, and most
+of the top locations are busy intersection nearby the business district, whcih has
+a higher demand for public trnsportation, the TTCcompany should consider this 
+situation and find the solution to reduce delay.
+
+```{=latex}
+\clearpage
+```
 
 # References
 
