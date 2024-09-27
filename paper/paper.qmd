@@ -1,13 +1,16 @@
 ---
-title: "Data analysis for 2023 streetcar's delay pattern in Toronto"
+title: "A Comprehensive Analysis of Trends, Causes, and Recommendations for Toronto's streetcar's delay"
 author: YITONG WANG
 thanks: "Code and data are available at: https://github.com/demainwang/streetcar_delay_analysis"
 date: today
 date-format: long
-abstract: "This paper analyze the delay patern of streetcar in Toronto in 2023 years based on the data from opendatatoronto. The result of analysis figure out that most streetcars' delays are concentrate in peak hour and occurs in specific intersection which located at prosperous square. Overall delays are short and within 10 minutes, extreme cases occasionaly happen. The main cause of delays are operational issue and mechanical problems, the finding provides an instructive direction which public transit should improve.."
+abstract: "This paper analyze the delay patern of streetcar in Toronto in 2023 years based on the data from opendatatoronto. The result of analysis figure out that most streetcars' delays are concentrate in peak hour and occurs in specific intersection which located at prosperous square. Overall delays are short and within 10 minutes, extreme cases occasionaly happen. The main cause of delays are operational issue and mechanical problems. Delay patter and related incidents are siginificated insights to improve the efficiency of public transportation, and it is highly related with citizen's life quality, the finding provides an instructive direction which public transit should consider."
 format: pdf
 number-sections: true
 bibliography: references.bib
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r}
@@ -27,44 +30,78 @@ library(knitr)
 cleaned_data <- read_csv('cleaned_data.csv')
 ```
 
-
 # Introduction
-In the metropolis like Toronto, public transportation is critical and essential
-for citizens' mobility, the streetcar runs by TTC is one common way that people
-use in their life. Public transportation originally aims to provide a more
-convenient way for people's mobility and reduce the traffic congestion, but the 
-frequent delays can cause an significant disruption for living quality and business.
 
-It is important to understand the pattern of delays, which can potentially improve
-the public transportation system. The reason of delays can be widely vary with time,
-location and incident. The data analysis notice that delay of streetcar has a high 
-possibility occur during rush hour in some prosperous region such as dunds square.
-The statistic analysis show that overall delay's time within 1 hour, and concentrate 
-in 10 minutes, some extreme cases also happen but with a less possibility. Due to the
-construction operating route of streetcar, most lines are east-west orientation, most
-delays occure in east-west bound.
+In the metropolis like Toronto, public transportation is critical and
+essential for citizens' mobility, the streetcar runs by TTC is one
+common way that people use in their life. Public transportation
+originally aims to provide a more convenient way for people's mobility
+and reduce the traffic congestion, but the frequent delays can cause an
+significant disruption for living quality and business.
 
-The paper focus on the 2023 streetcar's delay data from opendatatoronto (@citeopendatatoronto),
-based on R (@citeR) to do the data computing, and use package 'tidyverse' (@rohan) to
-create visualization and plotting, we use 'knitr' (@citeknitr). The paper aims to figure out the delay's pattern,
-and identify the variables contribute to delays of streetcar, such as location and time period, especially which incidents mainly affect the normal operation of streetcar. The rest
-of paper will discuss the source data and introduce the variables in @sec-data, the 
-visualization of data and tabular summary also present the important trend of streetcar
-delay data.
+It is important to understand the pattern of delays, which can
+potentially improve the public transportation system. The reason of
+delays can be widely vary with time, location and incident. The data
+analysis notice that delay of streetcar has a high possibility occur
+during rush hour in some prosperous region such as dunds square. The
+statistic analysis show that overall delay's time within 1 hour, and
+concentrate in 10 minutes, some extreme cases also happen but with a
+less possibility. Due to the construction operating route of streetcar,
+most lines are east-west orientation, most delays occure in east-west
+bound.
 
+The paper focus on the 2023 streetcar's delay data obtained from
+opendatatoronto (@citeopendatatoronto), based on R (@citeR) to do the
+data computing, and use package 'tidyverse' (@rohan) to create
+visualization and plotting. the usage of 'knitr' (@citeknitr) is for
+establishing the summary table. The paper aims to figure out the delay's
+pattern, and identify the variables contribute to delays of streetcar,
+such as location and time period, especially which incidents mainly
+affect the normal operation of streetcar. The rest of paper will discuss
+the source data and introduce the variables in @sec-data, the
+visualization of data and tabular summary also present the important
+trend of streetcar delay data.
 
 # Data {#sec-data}
+
 ## Data bacground
-The data we use in this paper comes from opendatatoronto, the dataset 'TTC Streetcar Delay Data' we use provides detailed information on streetcar delays in Toronto in 2023. Each record contains the date and time of the delay, the route, the location where the delay occurred, the reason for the delay, and the duration of the delay. We select some interest column to 
-figure out the pattern of occurrence of delay, summary the delay times and frequency
-for different variables. We cleaned the data, which removes row contain and abnormal 
-values, such as N/A or 0, and limit the delay time interval within 1 hour interval
-to exclude the outlier, since most delay time does not over 1 hour. We ignore the'route', 
-'Line', 'Vehicle' and'Min Gap' in raw data since it does not contribute to our research.
+
+The data we use in this paper comes from opendatatoronto, the dataset
+'TTC Streetcar Delay Data' we use provides detailed information on
+streetcar delays in Toronto in 2023. Each record contains the date and
+time of the delay, the route, the location where the delay occurred, the
+reason for the delay, and the duration of the delay. We select some
+interest column to figure out the pattern of occurrence of delay,
+summary the delay times and frequency for different variables. We
+cleaned the data, which removes row contain and abnormal values, such as
+N/A or 0, and limit the delay time interval within 1 hour interval to
+exclude the outlier, since most delay time does not over 1 hour. We
+ignore the'route', 'Line', 'Vehicle' and'Min Gap' in raw data since it
+does not contribute to our research.
+
+## Data Cleaning
+
+Since the original document is xlsx, the process of data cleaning as
+following steps: 1. The original data mostly looks good, but some values
+do not present correctly. We firstly use trimws() to delete any posiible
+whitespace nearby the data, then use as.numeric() to make sure data
+store in 'Min Gap' column as numeric value. 2. During these process,
+some blank or abnormal data will become to N/A value, we simply use
+na.omit() to ignore any rows contain N/A values. 3. We use sum to
+glimpse the delay values interval, and figure out that over 99 percents
+data within one our, some extreme case may affect the the eprformance of
+overall data, so we filter the 'Delay Min" within one hour, which also
+omit some 0 minutes delay.
 
 ## Ethical focus
-From the ethical perspective, this dataset does not contain any personal information, so there are fewer privacy issues. However, we need to consider the social context that drives data collection. Toronto's public transportation system, especially streetcar services, has always been a concern due to its reliability issues. The collection of this data aims to improve transparency and provide a foundation for data based policy making to improve the efficiency of
-public transportation.
+
+From the ethical perspective, this dataset does not contain any personal
+information, so there are fewer privacy issues. However, we need to
+consider the social context that drives data collection. Toronto's
+public transportation system, especially streetcar services, has always
+been a concern due to its reliability issues. The collection of this
+data aims to improve transparency and provide a foundation for data
+based policy making to improve the efficiency of public transportation.
 
 \newpage
 
@@ -80,18 +117,17 @@ public transportation.
 #| layout-ncol: 1
 
 ggplot(cleaned_data, aes(x = `Min Delay`)) +
-  geom_histogram(binwidth = 5, fill = "grey", color = "black") +
+  geom_histogram(binwidth = 5, fill = "orange", color = "black") +
   labs(title = "Frequency of Streetcar Delay Duration",
        x = "Delay Duration (Mins)", y = "Frequency") +
   theme_minimal()
 ```
 
-@fig-1 shows a clear right skewed distribution of the frequency of delay time period, 
-most common duration is around 10 minutes, which occupy 60 percents of total delay
-times. It presents in most situation the streetcar just typically delay for short
-time, and does not make a serious disruption for citizen's convenience.
-
-\newpage
+@fig-1 shows a clear right skewed distribution of the frequency of delay
+time period, most common duration is around 10 minutes, which occupy 60
+percents of total delay times. It presents in most situation the
+streetcar just typically delay for short time, and does not make a
+serious disruption for citizen's convenience.
 
 ```{r}
 #| eval: true
@@ -105,30 +141,29 @@ time, and does not make a serious disruption for citizen's convenience.
 incidents <- cleaned_data %>%
   count(Incident, sort = TRUE)
 ggplot(incidents, aes(x = reorder(Incident, n), y = n)) +
-  geom_bar(stat = "identity", fill = "grey") +
+  geom_bar(stat = "identity", fill = "blue") +
   labs(title = "Frequency of Streetcar Incidents",
        x = "Incident Type", y = "Frequency of Incident") +
   theme_minimal() +
   coord_flip()
 
 ggplot(cleaned_data, aes(x = Incident, y = `Min Delay`)) +
-  geom_boxplot(fill = "grey") +
+  geom_boxplot(fill = "orange", color = "black") +
   labs(title = "Delay Time by Vary Incidents",
        x = "Incident", y = "Delay Time (Mins)") +
   theme_minimal() +
   coord_flip()
 ```
 
-@fig-2-1 The bar plots presents operational issue and mechnical problem are the top
-2 main cause of delay, and the responsibility for this 2 factors belong to TTC, 
-it is obvious TTC company should improve their internal training and have a better
-inspection before the operation of streetcar. 
+@fig-2-1 The bar plots presents operational issue and mechnical problem
+are the top 2 main cause of delay, and the responsibility for this 2
+factors belong to TTC, it is obvious TTC company should improve their
+internal training and have a better inspection before the operation of
+streetcar.
 
-
-@fig-2-2 Fortunately, the box plot shows
-these 2 main factors ofdelay do not result in a hard disruption of citizen's transportation, they usually lead to a 10 minutes delay.
-
-\newpage
+@fig-2-2 Fortunately, the box plot shows these 2 main factors ofdelay do
+not result in a hard disruption of citizen's transportation, they
+usually lead to a 10 minutes delay.
 
 ```{r}
 #| eveal: true
@@ -151,12 +186,11 @@ ggplot(monthly_delay, aes(x = Month, y = Delay_Count)) +
   theme_minimal()
 ```
 
-
-
-@fig-3 The line plot shows a increase trend of the frequency of delays, before september
-the monthly delay has fluctuation between 750 to 900, and has a significant increase
-from september to october, then keep going up. The incrase trend shows the delay
-frequency becoming increasingly serve alone time.
+@fig-3 The line plot shows a increase trend of the frequency of delays,
+before september the monthly delay has fluctuation between 750 to 900,
+and has a significant increase from september to october, then keep
+going up. The incrase trend shows the delay frequency becoming
+increasingly serve alone time.
 
 \newpage
 
@@ -177,15 +211,58 @@ kable(summary_table, caption = "Summary of Streetcar Delays by Location",
       col.names = c("Location", "Total Delays"))
 ```
 
-@fig-4 This table summary the total delays times by different location, and most
-of the top locations are busy intersection nearby the business district, whcih has
-a higher demand for public trnsportation, the TTCcompany should consider this 
-situation and find the solution to reduce delay.
+@fig-4 This table summary the total delays times by different location,
+and most of the top locations are busy intersection nearby the business
+district, whcih has a higher demand for public trnsportation, the
+TTCcompany should consider this situation and find the solution to
+reduce delay.
 
-```{=latex}
-\clearpage
+# Summary
+```{r}
+#| eval: true
+#| label: fig-5
+#| fig-cap: "Monthly summary"
+#| echo: false
+#| warning: false
+#| message: false
+
+cleaned_data <- cleaned_data %>%
+  mutate(Date = as.Date(Date, format = "%Y-%m-%d"),
+         Month = format(Date, "%Y-%m"))
+
+# Summarize data by Month
+summary_table <- cleaned_data %>%
+  group_by(Month) %>%
+  summarise(
+    Average_Delay = mean(`Min Delay`),  
+    Total_Delays = n(),                           
+    Max_Delay = max(`Min Delay`),                 
+    Most_Frequent_Location = Location[which.max(table(Location))],  
+    Most_Frequent_Bound = Bound[which.max(table(Bound))]
+  )
+
+# Create the table with kable()
+kable(
+  summary_table, 
+  caption = "Monthly Summary of Streetcar Delays",
+  col.names = c("Month", "Average Delay (Mins)", "Total Delay Times", "Max Delay (Mins)", "Most Frequent Delay Location", "Most Frequent Bound"),
+  align = 'c'
+)
 ```
+@fig-5 The summary table by month presents the mean delay times for each month
+around 11.49 to 13.24, which fits the @fig-1 as most delay times are around 10 minutes,
+that may slightly disrupt citizen's plan. However, some extreme cases up to 60 minutes
+delay can totally destroy the citizen's reliability of public transit, TTC company
+should try best to avoid the occurrence of extreme case. Based on table, there is a 
+increase trend of delay frequency through the year, public transit system should
+notice this situation and control the possibility of delay. West bound is the most
+serve direction of delay problem, TTC could consider optimize the route or timetable
+of the streetcar to reduce the possible delay. For most frequent delay's location, 
+TTC should rewrite the extimate time table based on actual situation, in order to
+make the estimate arrival time more exact, and increase the reliability of public transit.
+
+
+
+\newpage
 
 # References
-
-
