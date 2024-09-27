@@ -19,4 +19,5 @@ opendatatoronto.
 
 
 ## Statement on LLM usage
-Support from ChatGpt4 to help understand the usage of kable().
+Support from ChatGpt4 to help understand the usage of kable(). Record can be found
+in other/llm/usage.txt.
