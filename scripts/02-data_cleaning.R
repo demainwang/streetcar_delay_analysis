@@ -21,8 +21,9 @@ data1 <- na.omit(data1)
 sum(data1$`Min Delay` < 61)
 sum(data1$`Min Delay` > 60)
 data3 <- data1 %>% filter(`Min Delay` > 0 & `Min Delay` < 61)
-cleaned_data <- data3 %>% select(Day, Location, `Min Delay`, Bound)
-
+cleaned_data <- data3 %>% select(Date, Day, Time, Location, Incident, `Min Delay`, Bound)
+cleaned_data <- cleaned_data %>%
+  mutate(Date = as.Date(Date, format = "%Y-%m-%d"))
 
 #### Save data ####
 write_csv(cleaned_data, "streetcar_delay_analysis/data/analysis_data/cleaned_data.csv")
