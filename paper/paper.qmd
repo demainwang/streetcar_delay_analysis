@@ -36,19 +36,19 @@ cleaned_data <- read_csv('cleaned_data.csv')
 In the metropolis like Toronto, public transportation is critical and
 essential for citizens' mobility, the streetcar runs by TTC is one
 common way that people use in their life. Public transportation
-originally aims to provide a more convenient way for people's mobility
+originally aims to provide a more convenient way for people's mobility,
 and reduce the traffic congestion, but the frequent delays can cause an
 significant disruption for living quality and business.
 
 It is important to understand the pattern of delays, which can
 potentially improve the public transportation system. The reason of
-delays can be widely vary with time, location and incident. The data
+delays can be widely varied with time, location and incident. The data
 analysis notice that delay of streetcar has a high possibility occur
-during rush hour in some prosperous region such as dunds square. The
+during rush hour in some prosperous region such as Dundas square. The
 statistic analysis show that overall delay's time within 1 hour, and
 concentrate in 10 minutes, some extreme cases also happen but with a
 less possibility. Due to the construction operating route of streetcar,
-most lines are east-west orientation, most delays occure in east-west
+most lines are east-west orientation, most delays occur in east-west
 bound.
 
 The paper focus on the 2023 streetcar's delay data obtained from
@@ -57,7 +57,7 @@ data computing, and use package 'tidyverse' (@rohan) to create
 visualization and plotting, especially 'ggplot2' (@citeggplot2), 
 most plots are created through this package. The usage of 'knitr' (@citeknitr) is for
 establishing the summary table. We also use 'hms' (@citehms) package to ensure data about time
-work correctlt. The paper aims to figure out the delay's
+work correctly. The paper aims to figure out the delay's
 pattern, and identify the variables contribute to delays of streetcar,
 such as location and time period, especially which incidents mainly
 affect the normal operation of streetcar. The rest of paper will discuss
@@ -85,17 +85,17 @@ Since the original document is xlsx, the process of data cleaning as
 following steps:
 
 1. The original data mostly looks good, but some values
-do not present correctly. We firstly use trimws() to delete any posiible
+do not present correctly. We firstly use trimws() to delete any possible
 whitespace nearby the data, then use as.numeric() to make sure data
 store in 'Min Gap' column as numeric value. 
 
-2. During these process,
+2. During this process,
 some blank or abnormal data will become to N/A value, we simply use
 na.omit() to ignore any rows contain N/A values.
 
 3. We use sum to
-glimpse the delay values interval, and figure out that over 99 percents
-data within one our, some extreme case may affect the the eprformance of
+glimpse the delay values interval, and figure out that over 99 percent's
+data within one our, some extreme case may affect the the performance of
 overall data, so we filter the 'Delay Min" within one hour, which also
 omit some 0 minutes delay.
 
@@ -163,13 +163,13 @@ ggplot(cleaned_data, aes(x = Incident, y = `Min Delay`)) +
   coord_flip()
 ```
 
-@fig-2-1 The bar plots presents operational issue and mechnical problem
+@fig-2-1 The bar plot presents operational issue and mechanical problem
 are the top 2 main cause of delay, and the responsibility for this 2
 factors belong to TTC, it is obvious TTC company should improve their
 internal training and have a better inspection before the operation of
 streetcar.
 
-@fig-2-2 Fortunately, the box plot shows these 2 main factors ofdelay do
+@fig-2-2 Fortunately, the box plot shows these 2 main factors of delay do
 not result in a hard disruption of citizen's transportation, they
 usually lead to a 10 minutes delay.
 
@@ -197,9 +197,9 @@ ggplot(monthly_delay, aes(x = Month, y = Delay_Count)) +
 ```
 
 @fig-3 The line plot shows a increase trend of the frequency of delays,
-before september the monthly delay has fluctuation between 750 to 900,
-and has a significant increase from september to october, then keep
-going up. The incrase trend shows the delay frequency becoming
+before September the monthly delay has fluctuation between 750 to 900,
+and has a significant increase from September to October, then keep
+going up. The increase trend shows the delay frequency becoming
 increasingly serve alone time.
 
 \clearpage
@@ -223,8 +223,8 @@ kable(summary_table, caption = "Summary of Streetcar Delays by Location",
 
 @fig-4 This table summary the total delays times by different location,
 and most of the top locations are busy intersection nearby the business
-district, whcih has a higher demand for public trnsportation, the
-TTCcompany should consider this situation and find the solution to
+district, which has a higher demand for public transportation, the
+TTC company should consider this situation and find the solution to
 reduce delay.
 
 \clearpage
@@ -274,7 +274,7 @@ increase trend of delay frequency through the year, public transit system should
 notice this situation and control the possibility of delay. West bound is the most
 serve direction of delay problem, TTC could consider optimize the route or timetable
 of the streetcar to reduce the possible delay. For most frequent delay's location, 
-TTC should rewrite the extimate time table based on actual situation, in order to
+TTC should rewrite the estimate timetable based on actual situation, in order to
 make the estimate arrival time more exact, and increase the reliability of public transit.
 
 
